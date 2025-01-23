@@ -1,0 +1,15 @@
+{
+  "name": "jstddinterp",
+  "version": "1.0.0",
+  "description": "js interpreter toy",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "acorn": "^8.14.0",
+    "jest": "^28.1.3"
+  }
+}
