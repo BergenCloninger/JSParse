@@ -12,6 +12,7 @@ beforeAll( ()=>{
     console.log(body);
     console.log(body[0].declarations);
     console.log(body[0].declarations[0].id);
+    console.log(body[1].expression);
 })
 
 test('two nodes parsed ', ()=>{
@@ -21,10 +22,10 @@ test('two nodes parsed ', ()=>{
 })
 
 test('check if node has type: \'VariableDeclaration\':', ()=>{
-    const node1 = evaluator.checkNodeType(body[0]); //check first node
-    const node2 = evaluator.checkNodeType(body[1]); //check second node
+    const node1 = evaluator.checkNodeType(body[0]);
+    const node2 = evaluator.checkNodeType(body[1]);
     expect(node1).toBe(true);
-    expect(node2).toBe(false); //we expect this to be false since it doesn't have that type (this is probably unnecessary to test, but its good practice)
+    expect(node2).toBe(false);
 })
 
 test('variable name is a', ()=>{
@@ -54,4 +55,22 @@ test("given varName, varValue, and environment, combine and store", ()=> {
     const environment = [];
     const result = evaluator.storeEntryInEnvironment(valNamePair, valuePair, environment);
     expect(result).toStrictEqual([{"name": 'a', "value": "hello"}]);
+})
+
+test('get nodeType', () => {
+    const result = evaluator.checkExpression(body[1]);
+    expect(result).toBe(true);
+})
+
+test('get varName', () => {
+    expect(evaluator.readVarName(body[1].expression.arguments[0])).toBe('a');
+})
+
+test('get callee name', () => {
+    expect(evaluator.readExpression(body[1].expression)).toBe("print");
+})
+
+test('print statement', () => {
+    environmentExpected = [{"name": 'a', "value": "hello"}];
+    evaluator.executeExpression(body[1].expression, environmentExpected);
 })
