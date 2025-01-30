@@ -9,10 +9,10 @@ beforeAll( ()=>{
     const loaded = nodes.loadFile("./test/sample.js")
     body = nodes.parseFile(loaded);
 
-    console.log(body);
-    console.log(body[0].declarations);
-    console.log(body[0].declarations[0].id);
-    console.log(body[1].expression);
+    // console.log(body);
+    // console.log(body[0].declarations);
+    // console.log(body[0].declarations[0].id);
+    // console.log(body[1].expression);
 })
 
 test('two nodes parsed ', ()=>{
@@ -73,4 +73,14 @@ test('get callee name', () => {
 test('print statement', () => {
     environmentExpected = [{"name": 'a', "value": "hello"}];
     evaluator.executeExpression(body[1].expression, environmentExpected);
+})
+
+test("declare variable execution", ()=> {
+    const environment = [];
+    const result = evaluator.varDeclareExec(body[0], environment);
+    expect(result).toStrictEqual([{"name": 'a', "value": "hello"}]);
+})
+
+test("outerLoop", () => {
+    evaluator.outerLoop(body);
 })

@@ -15,8 +15,16 @@ class Evaluator {
         return node.name;
     }
 
+    readDeclareVarName(node) {
+        return node.declarations[0].id.name;
+    }
+
+    readDeclareNodeVal(node) {
+        return node.declarations[0].init.value;
+    }
+
     readExpression(node) {
-        return node.callee.name; 
+        return node.expression.callee.name; 
     }
 
     makeVarPair(varName) {
@@ -39,6 +47,7 @@ class Evaluator {
     }
 
     executeExpression(node, environment) {
+        console.log("Node:", node);
         if (node.callee == null) {
             return -1;
         }
@@ -56,6 +65,28 @@ class Evaluator {
 
             console.log("Print statement: ", result[0].value);
         }
+    }
+
+    varDeclareExec(node, environment) {
+        const valNamePair = this.makeVarPair(this.readDeclareVarName(node));
+        const valuePair = this.makeValuePair(this.readDeclareNodeVal(node));
+        
+        return this.storeEntryInEnvironment(valNamePair, valuePair, environment);
+    }
+
+    outerLoop(body) {
+        let environment = [];
+
+        body.forEach(element => {
+            switch(this.getNodeType(element)) {
+                case "VariableDeclaration":
+                    environment = this.varDeclareExec(element, environment);
+                    break;
+                case "ExpressionStatement":
+                    this.executeExpression(element, environment);
+                    break;
+            }
+        });
     }
 }
 
